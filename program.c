@@ -50,6 +50,9 @@ const char CARTE[HAUTEUR][LARGEUR + 1] = {
 };
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[]);
+int estDansZone(int joueur, int ligne);
+int ligneArrivee(int joueur);
+void afficherGrille(int grille[HAUTEUR][LARGEUR]);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -73,6 +76,55 @@ void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[]
     }
 }
 
+int estDansZone(int joueur, int ligne)
+{
+    if (joueur == JOUEUR1) {
+        return ligne < TAILLE_ZONE;
+    }
+    return ligne >= HAUTEUR - TAILLE_ZONE;
+}
+
+int ligneArrivee(int joueur)
+{
+    if (joueur == JOUEUR1) {
+        return HAUTEUR - 1;
+    }
+    return 0;
+}
+
+void afficherGrille(int grille[HAUTEUR][LARGEUR])
+{
+    printf("\n     ");
+    for (int c = 0; c < LARGEUR; c++) {
+        printf("%2d ", c);
+    }
+    printf("\n");
+
+    for (int l = 0; l < HAUTEUR; l++) {
+        printf("%3d   ", l);
+
+        for (int c = 0; c < LARGEUR; c++) {
+            if (grille[l][c] != VIDE) {
+                printf("%c  ", SYMBOLES[grille[l][c]]);
+            } else {
+                printf("%c  ", CARTE[l][c]);
+            }
+        }
+
+        for (int j = JOUEUR1; j <= JOUEUR2; j++) {
+            if (estDansZone(j, l)) {
+                printf("  zone %c", SYMBOLES[j]);
+            }
+        }
+        for (int j = JOUEUR1; j <= JOUEUR2; j++) {
+            if (ligneArrivee(j) == l) {
+                printf("  | arrivee %c", SYMBOLES[j]);
+            }
+        }
+        printf("\n");
+    }
+}
+
 int main()
 {
     int grille[HAUTEUR][LARGEUR];
@@ -80,6 +132,7 @@ int main()
     int reserve[NB_JOUEURS + 1];
 
     initialiserPartie(grille, scores, reserve);
+    afficherGrille(grille);
 
     return 0;
 }
