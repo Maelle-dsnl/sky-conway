@@ -27,6 +27,9 @@
 #define COLONNE_CARRE_J2 8
 
 #define VOISINAGE 1
+#define VOISINS_NAISSANCE 3
+#define SURVIE_MIN 2
+#define SURVIE_MAX 3
 
 #define SYMB_CIEL '.'
 #define SYMB_GRELE '#'
@@ -61,6 +64,8 @@ void afficherScores(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], i
 int estDansGrille(int ligne, int colonne);
 int compterVoisins(int grille[HAUTEUR][LARGEUR], int ligne, int colonne);
 int proprietaireNaissance(int grille[HAUTEUR][LARGEUR], int ligne, int colonne);
+void copierGrille(int source[HAUTEUR][LARGEUR], int destination[HAUTEUR][LARGEUR]);
+void evoluerGrille(int grille[HAUTEUR][LARGEUR], int scores[]);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -205,6 +210,38 @@ int proprietaireNaissance(int grille[HAUTEUR][LARGEUR], int ligne, int colonne)
         return JOUEUR1;
     }
     return JOUEUR2;
+}
+
+void copierGrille(int source[HAUTEUR][LARGEUR], int destination[HAUTEUR][LARGEUR])
+{
+    for (int l = 0; l < HAUTEUR; l++) {
+        for (int c = 0; c < LARGEUR; c++) {
+            destination[l][c] = source[l][c];
+        }
+    }
+}
+
+void evoluerGrille(int grille[HAUTEUR][LARGEUR], int scores[])
+{
+    int ancienne[HAUTEUR][LARGEUR];
+
+    copierGrille(grille, ancienne);
+
+    for (int l = 0; l < HAUTEUR; l++) {
+        for (int c = 0; c < LARGEUR; c++) {
+            int voisins = compterVoisins(ancienne, l, c);
+
+            if (ancienne[l][c] == VIDE) {
+                if (voisins == VOISINS_NAISSANCE) {
+                    int proprietaire = proprietaireNaissance(ancienne, l, c);
+                    grille[l][c] = proprietaire;
+                    scores[proprietaire] = scores[proprietaire] + POINTS_NAISSANCE;
+                }
+            } else if (voisins < SURVIE_MIN || voisins > SURVIE_MAX) {
+                grille[l][c] = VIDE;
+            }
+        }
+    }
 }
 
 int main()
