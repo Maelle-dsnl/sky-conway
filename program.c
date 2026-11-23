@@ -60,6 +60,7 @@ int compterAvionsEnVol(int grille[HAUTEUR][LARGEUR], int joueur);
 void afficherScores(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int manche);
 int estDansGrille(int ligne, int colonne);
 int compterVoisins(int grille[HAUTEUR][LARGEUR], int ligne, int colonne);
+int proprietaireNaissance(int grille[HAUTEUR][LARGEUR], int ligne, int colonne);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -181,6 +182,29 @@ int compterVoisins(int grille[HAUTEUR][LARGEUR], int ligne, int colonne)
         }
     }
     return total;
+}
+
+int proprietaireNaissance(int grille[HAUTEUR][LARGEUR], int ligne, int colonne)
+{
+    int voisinsJ1 = 0;
+    int voisinsJ2 = 0;
+
+    for (int dl = -VOISINAGE; dl <= VOISINAGE; dl++) {
+        for (int dc = -VOISINAGE; dc <= VOISINAGE; dc++) {
+            if ((dl != 0 || dc != 0) && estDansGrille(ligne + dl, colonne + dc)) {
+                if (grille[ligne + dl][colonne + dc] == JOUEUR1) {
+                    voisinsJ1++;
+                } else if (grille[ligne + dl][colonne + dc] == JOUEUR2) {
+                    voisinsJ2++;
+                }
+            }
+        }
+    }
+
+    if (voisinsJ1 > voisinsJ2) {
+        return JOUEUR1;
+    }
+    return JOUEUR2;
 }
 
 int main()
