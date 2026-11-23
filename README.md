@@ -26,14 +26,14 @@ Les joueurs ne peuvent pas arrêter l'évolution du ciel. Ils peuvent seulement 
 
 | Joueur | Compagnie | Symbole | Zone de départ | Ligne d'arrivée |
 |---|---|---|---|---|
-| J1 | EasyJet | `E` | lignes 0 à 2 (en haut) | ligne 9 (tout en bas) |
-| J2 | Wizz Air | `W` | lignes 7 à 9 (en bas) | ligne 0 (tout en haut) |
+| J1 | Air France | `F` | lignes 0 à 2 (en haut) | ligne 9 (tout en bas) |
+| J2 | Aer Lingus | `L` | lignes 7 à 9 (en bas) | ligne 0 (tout en haut) |
 
 ### La grille
 
 - 10 lignes × 12 colonnes.
 - **Pas torique** : les bords ne sont pas reliés. Une case hors de la grille compte comme vide.
-- Une case vaut `.` (ciel), `#` (grêle), `E` (avion de J1) ou `W` (avion de J2).
+- Une case vaut `.` (ciel), `#` (grêle), `F` (avion de J1) ou `L` (avion de J2).
 
 ### La carte de départ
 
@@ -41,16 +41,16 @@ Chaque joueur commence avec **un carré de 4 avions** sur la grille et **6 avion
 
 ```
       0  1  2  3  4  5  6  7  8  9 10 11
-  0   .  .  .  .  .  .  .  .  .  .  .  .    zone E  | arrivée W
-  1   .  .  E  E  .  .  .  .  .  .  .  .    zone E
-  2   .  .  E  E  .  .  .  .  .  .  .  .    zone E
+  0   .  .  .  .  .  .  .  .  .  .  .  .    zone F  | arrivée L
+  1   .  .  F  F  .  .  .  .  .  .  .  .    zone F
+  2   .  .  F  F  .  .  .  .  .  .  .  .    zone F
   3   .  .  .  .  .  .  .  .  .  .  .  .
   4   .  .  #  #  .  .  .  .  #  #  .  .
   5   .  .  #  #  .  .  .  .  #  #  .  .
   6   .  .  .  .  .  .  .  .  .  .  .  .
-  7   .  .  .  .  .  .  .  .  W  W  .  .    zone W
-  8   .  .  .  .  .  .  .  .  W  W  .  .    zone W
-  9   .  .  .  .  .  .  .  .  .  .  .  .    zone W  | arrivée E
+  7   .  .  .  .  .  .  .  .  L  L  .  .    zone L
+  8   .  .  .  .  .  .  .  .  L  L  .  .    zone L
+  9   .  .  .  .  .  .  .  .  .  .  .  .    zone L  | arrivée F
 ```
 
 Le carré 2×2 s'appelle un **bloc** dans le jeu de la vie. C'est une forme **stable** : il ne bouge pas tant que personne n'y touche.
@@ -115,7 +115,7 @@ Les directions se choisissent avec le pavé numérique :
 
 ## 6. L'évolution du ciel (règles de Conway)
 
-Pour chaque case, on compte ses **voisins** : les avions présents dans les 8 cases autour. **La compagnie ne compte pas** : un `E` et un `W` sont tous les deux un voisin. La grêle ne compte pas non plus : une case de grêle vide est une case vide.
+Pour chaque case, on compte ses **voisins** : les avions présents dans les 8 cases autour. **La compagnie ne compte pas** : un `F` et un `L` sont tous les deux un voisin. La grêle ne compte pas non plus : une case de grêle vide est une case vide.
 
 | Situation | Résultat |
 |---|---|
@@ -125,7 +125,7 @@ Pour chaque case, on compte ses **voisins** : les avions présents dans les 8 ca
 
 Toutes les cases sont mises à jour **en même temps** : on calcule la nouvelle grille à partir de l'ancienne, sans toucher à l'ancienne pendant le calcul.
 
-**À qui appartient un avion qui naît ?** À la compagnie qui a **le plus d'avions parmi ses 3 voisins**. Comme il y a 3 voisins et 2 compagnies, il y a toujours une majorité : 2 `E` et 1 `W` donnent un `E`. Cette compagnie marque **+2 points**.
+**À qui appartient un avion qui naît ?** À la compagnie qui a **le plus d'avions parmi ses 3 voisins**. Comme il y a 3 voisins et 2 compagnies, il y a toujours une majorité : 2 `F` et 1 `L` donnent un `F`. Cette compagnie marque **+2 points**.
 
 Un avion qui survit garde sa compagnie.
 
@@ -135,7 +135,7 @@ Un avion qui survit garde sa compagnie.
 
 Après chaque action et après l'évolution, tout avion qui se trouve sur **la ligne d'arrivée de sa compagnie** atterrit : il est retiré de la grille et rapporte **5 points**.
 
-- Un `E` sur la ligne 9 atterrit. Un `W` sur la ligne 9 reste en place.
+- Un `F` sur la ligne 9 atterrit. Un `L` sur la ligne 9 reste en place.
 - Un avion qui naît directement sur sa ligne d'arrivée atterrit aussi.
 - Un avion qui a atterri ne revient pas en jeu.
 
@@ -158,21 +158,21 @@ Un bloc ne peut pas avancer case par case sans se casser. Mais on peut faire **s
 
 ```
 Avant                 Action 1 : (1,2) → (3,2)    Action 2 : (1,3) → (3,3)
-1   .  E  E  .        1   .  .  E  .              1   .  .  .  .
-2   .  E  E  .        2   .  E  E  .              2   .  E  E  .
-3   .  .  .  .        3   .  E  .  .              3   .  E  E  .
+1   .  F  F  .        1   .  .  F  .              1   .  .  .  .
+2   .  F  F  .        2   .  F  F  .              2   .  F  F  .
+3   .  .  .  .        3   .  F  .  .              3   .  F  F  .
 ```
 
 Le bloc a avancé d'une ligne et il est toujours stable : il survit à l'évolution. C'est la technique de base pour traverser le ciel.
 
 ### La cascade d'atterrissage (1 action)
 
-Quand un bloc `E` occupe les lignes 7 et 8, on fait sauter **un seul** avion du haut sur la ligne 9 : il atterrit (+5). Il reste 3 avions en forme de « L ». À l'évolution, la case vide a exactement 3 voisins : un avion `E` y naît (+2) et **le bloc se reforme tout seul**. On peut recommencer à la manche suivante.
+Quand un bloc `F` occupe les lignes 7 et 8, on fait sauter **un seul** avion du haut sur la ligne 9 : il atterrit (+5). Il reste 3 avions en équerre. À l'évolution, la case vide a exactement 3 voisins : un avion `F` y naît (+2) et **le bloc se reforme tout seul**. On peut recommencer à la manche suivante.
 
 ```
 Avant                 Saut (7,2) → (9,2)       Après l'évolution
-7   .  E  E  .        7   .  .  E  .           7   .  E  E  .
-8   .  E  E  .        8   .  E  E  .           8   .  E  E  .
+7   .  F  F  .        7   .  .  F  .           7   .  F  F  .
+8   .  F  F  .        8   .  F  F  .           8   .  F  F  .
 9   .  .  .  .        9   .  .  .  .  (+5)     9   .  .  .  .  (+2)
 ```
 
@@ -180,13 +180,13 @@ Si on fait atterrir 2 avions d'un coup, les 2 qui restent sont isolés et meuren
 
 ### Attaquer l'adversaire
 
-Un seul avion `W` posé juste sous un bloc `E` suffit à le casser :
+Un seul avion `L` posé juste sous un bloc `F` suffit à le casser :
 
 ```
 Avant l'évolution     Après 1 évolution
-4   .  E  E  .        4   .  E  E  .
-5   .  E  E  .        5   E  .  .  .
-6   .  W  .  .        6   .  W  E  .
+4   .  F  F  .        4   .  F  F  .
+5   .  F  F  .        5   F  .  .  .
+6   .  L  .  .        6   .  L  F  .
 ```
 
 Les avions du bas du bloc ont maintenant 4 voisins : ils disparaissent. Le bloc n'est plus stable.
@@ -224,7 +224,7 @@ Un bloc qui fonce tout droit vers le bas arrive sur la grêle des colonnes 2 et 
 - Un seul fichier `program.c`, écrit uniquement avec les notions vues en cours : variables, `if` / `switch`, boucles `for` / `while` / `do...while`, fonctions, tableaux à 1 et 2 dimensions, chaînes de caractères.
 - Pas de `struct`, pas de pointeurs, pas de `malloc`, pas de bibliothèque externe.
 - Les saisies se font avec `fgets`, comme dans le cours. Le texte tapé est ensuite converti en nombre caractère par caractère.
-- La carte (ciel et grêle) est un tableau de chaînes de caractères. Les avions sont dans un tableau d'entiers séparé : `0` = vide, `1` = EasyJet, `2` = Wizz Air.
+- La carte (ciel et grêle) est un tableau de chaînes de caractères. Les avions sont dans un tableau d'entiers séparé : `0` = vide, `1` = Air France, `2` = Aer Lingus.
 - Les fonctions de logique du jeu ne font aucun affichage : elles renvoient un code, et ce sont les fonctions d'affichage qui écrivent les messages.
 
 ### Constantes du programme
