@@ -26,6 +26,8 @@
 #define LIGNE_CARRE_J2 7
 #define COLONNE_CARRE_J2 8
 
+#define VOISINAGE 1
+
 #define SYMB_CIEL '.'
 #define SYMB_GRELE '#'
 
@@ -56,6 +58,8 @@ int ligneArrivee(int joueur);
 void afficherGrille(int grille[HAUTEUR][LARGEUR]);
 int compterAvionsEnVol(int grille[HAUTEUR][LARGEUR], int joueur);
 void afficherScores(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int manche);
+int estDansGrille(int ligne, int colonne);
+int compterVoisins(int grille[HAUTEUR][LARGEUR], int ligne, int colonne);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -151,6 +155,32 @@ void afficherScores(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], i
                COMPAGNIES[j], SYMBOLES[j], scores[j], SCORE_VICTOIRE,
                reserve[j], compterAvionsEnVol(grille, j));
     }
+}
+
+int estDansGrille(int ligne, int colonne)
+{
+    if (ligne < 0 || ligne >= HAUTEUR) {
+        return 0;
+    }
+    if (colonne < 0 || colonne >= LARGEUR) {
+        return 0;
+    }
+    return 1;
+}
+
+int compterVoisins(int grille[HAUTEUR][LARGEUR], int ligne, int colonne)
+{
+    int total = 0;
+
+    for (int dl = -VOISINAGE; dl <= VOISINAGE; dl++) {
+        for (int dc = -VOISINAGE; dc <= VOISINAGE; dc++) {
+            if ((dl != 0 || dc != 0) && estDansGrille(ligne + dl, colonne + dc)
+                && grille[ligne + dl][colonne + dc] != VIDE) {
+                total++;
+            }
+        }
+    }
+    return total;
 }
 
 int main()
