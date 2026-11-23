@@ -49,7 +49,37 @@ const char CARTE[HAUTEUR][LARGEUR + 1] = {
     "............"
 };
 
+void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[]);
+
+
+void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
+{
+    for (int l = 0; l < HAUTEUR; l++) {
+        for (int c = 0; c < LARGEUR; c++) {
+            grille[l][c] = VIDE;
+        }
+    }
+
+    for (int j = 0; j <= NB_JOUEURS; j++) {
+        scores[j] = 0;
+        reserve[j] = RESERVE_DEPART;
+    }
+
+    for (int l = 0; l < TAILLE_CARRE; l++) {
+        for (int c = 0; c < TAILLE_CARRE; c++) {
+            grille[LIGNE_CARRE_J1 + l][COLONNE_CARRE_J1 + c] = JOUEUR1;
+            grille[LIGNE_CARRE_J2 + l][COLONNE_CARRE_J2 + c] = JOUEUR2;
+        }
+    }
+}
+
 int main()
 {
+    int grille[HAUTEUR][LARGEUR];
+    int scores[NB_JOUEURS + 1];
+    int reserve[NB_JOUEURS + 1];
+
+    initialiserPartie(grille, scores, reserve);
+
     return 0;
 }
