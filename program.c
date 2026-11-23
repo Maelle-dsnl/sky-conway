@@ -31,6 +31,10 @@
 #define SURVIE_MIN 2
 #define SURVIE_MAX 3
 
+#define SAISIE_INVALIDE -1
+#define CHIFFRES_MAX 3
+#define BASE_DECIMALE 10
+
 #define SYMB_CIEL '.'
 #define SYMB_GRELE '#'
 
@@ -66,6 +70,7 @@ int compterVoisins(int grille[HAUTEUR][LARGEUR], int ligne, int colonne);
 int proprietaireNaissance(int grille[HAUTEUR][LARGEUR], int ligne, int colonne);
 void copierGrille(int source[HAUTEUR][LARGEUR], int destination[HAUTEUR][LARGEUR]);
 void evoluerGrille(int grille[HAUTEUR][LARGEUR], int scores[]);
+int texteEnEntier(char texte[]);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -242,6 +247,25 @@ void evoluerGrille(int grille[HAUTEUR][LARGEUR], int scores[])
             }
         }
     }
+}
+
+int texteEnEntier(char texte[])
+{
+    int nombre = 0;
+    int i = 0;
+
+    while (texte[i] != '\n' && texte[i] != '\0') {
+        if (texte[i] < '0' || texte[i] > '9' || i >= CHIFFRES_MAX) {
+            return SAISIE_INVALIDE;
+        }
+        nombre = nombre * BASE_DECIMALE + (texte[i] - '0');
+        i++;
+    }
+
+    if (i == 0) {
+        return SAISIE_INVALIDE;
+    }
+    return nombre;
 }
 
 int main()
