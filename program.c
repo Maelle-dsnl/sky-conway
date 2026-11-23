@@ -18,6 +18,7 @@
 #define SCORE_VICTOIRE 20
 #define FLOTTE_MIN 2
 #define MANCHES_MAX 30
+#define PREMIERE_MANCHE 1
 
 #define TAILLE_CARRE 2
 #define LIGNE_CARRE_J1 1
@@ -53,6 +54,8 @@ void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[]
 int estDansZone(int joueur, int ligne);
 int ligneArrivee(int joueur);
 void afficherGrille(int grille[HAUTEUR][LARGEUR]);
+int compterAvionsEnVol(int grille[HAUTEUR][LARGEUR], int joueur);
+void afficherScores(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int manche);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -125,14 +128,41 @@ void afficherGrille(int grille[HAUTEUR][LARGEUR])
     }
 }
 
+int compterAvionsEnVol(int grille[HAUTEUR][LARGEUR], int joueur)
+{
+    int total = 0;
+
+    for (int l = 0; l < HAUTEUR; l++) {
+        for (int c = 0; c < LARGEUR; c++) {
+            if (grille[l][c] == joueur) {
+                total++;
+            }
+        }
+    }
+    return total;
+}
+
+void afficherScores(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int manche)
+{
+    printf("\n  Manche %d / %d\n", manche, MANCHES_MAX);
+
+    for (int j = JOUEUR1; j <= JOUEUR2; j++) {
+        printf("  %-10s (%c) : %2d / %d points   reserve %d   avions en vol %d\n",
+               COMPAGNIES[j], SYMBOLES[j], scores[j], SCORE_VICTOIRE,
+               reserve[j], compterAvionsEnVol(grille, j));
+    }
+}
+
 int main()
 {
     int grille[HAUTEUR][LARGEUR];
     int scores[NB_JOUEURS + 1];
     int reserve[NB_JOUEURS + 1];
+    int manche = PREMIERE_MANCHE;
 
     initialiserPartie(grille, scores, reserve);
     afficherGrille(grille);
+    afficherScores(grille, scores, reserve, manche);
 
     return 0;
 }
