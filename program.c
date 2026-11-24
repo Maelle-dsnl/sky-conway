@@ -87,6 +87,8 @@ int demanderLigne();
 int demanderColonne();
 int demanderDirection();
 int demanderDistance();
+int directionLigne(int direction);
+int directionColonne(int direction);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -346,6 +348,38 @@ int demanderDirection()
 int demanderDistance()
 {
     return lireEntier("Nombre de cases", 1, DISTANCE_MAX);
+}
+
+int directionLigne(int direction)
+{
+    switch (direction) {
+        case 7:
+        case 8:
+        case 9:
+            return -1;
+        case 1:
+        case 2:
+        case 3:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
+int directionColonne(int direction)
+{
+    switch (direction) {
+        case 7:
+        case 4:
+        case 1:
+            return -1;
+        case 9:
+        case 6:
+        case 3:
+            return 1;
+        default:
+            return 0;
+    }
 }
 
 int main()
