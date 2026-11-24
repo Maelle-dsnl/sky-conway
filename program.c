@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #define HAUTEUR 10
 #define LARGEUR 12
@@ -34,6 +35,7 @@
 #define SAISIE_INVALIDE -1
 #define CHIFFRES_MAX 3
 #define BASE_DECIMALE 10
+#define TAILLE_SAISIE 20
 
 #define SYMB_CIEL '.'
 #define SYMB_GRELE '#'
@@ -71,6 +73,7 @@ int proprietaireNaissance(int grille[HAUTEUR][LARGEUR], int ligne, int colonne);
 void copierGrille(int source[HAUTEUR][LARGEUR], int destination[HAUTEUR][LARGEUR]);
 void evoluerGrille(int grille[HAUTEUR][LARGEUR], int scores[]);
 int texteEnEntier(char texte[]);
+int lireEntier(char question[], int minimum, int maximum);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -265,6 +268,29 @@ int texteEnEntier(char texte[])
     if (i == 0) {
         return SAISIE_INVALIDE;
     }
+    return nombre;
+}
+
+int lireEntier(char question[], int minimum, int maximum)
+{
+    char texte[TAILLE_SAISIE];
+    int nombre;
+
+    do {
+        printf("  %s (%d a %d) : ", question, minimum, maximum);
+        fgets(texte, TAILLE_SAISIE, stdin);
+        nombre = texteEnEntier(texte);
+
+        while (texte[strlen(texte) - 1] != '\n') {
+            fgets(texte, TAILLE_SAISIE, stdin);
+            nombre = SAISIE_INVALIDE;
+        }
+
+        if (nombre < minimum || nombre > maximum) {
+            printf("  Saisie invalide : tape un nombre entre %d et %d.\n", minimum, maximum);
+        }
+    } while (nombre < minimum || nombre > maximum);
+
     return nombre;
 }
 
