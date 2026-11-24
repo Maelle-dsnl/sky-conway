@@ -37,6 +37,14 @@
 #define BASE_DECIMALE 10
 #define TAILLE_SAISIE 20
 
+#define PASSER 0
+#define DEPLACER 1
+#define POSER 2
+
+#define DIRECTION_MIN 1
+#define DIRECTION_MAX 9
+#define DIRECTION_CENTRE 5
+
 #define SYMB_CIEL '.'
 #define SYMB_GRELE '#'
 
@@ -74,6 +82,11 @@ void copierGrille(int source[HAUTEUR][LARGEUR], int destination[HAUTEUR][LARGEUR
 void evoluerGrille(int grille[HAUTEUR][LARGEUR], int scores[]);
 int texteEnEntier(char texte[]);
 int lireEntier(char question[], int minimum, int maximum);
+int demanderAction(int joueur, int numeroAction);
+int demanderLigne();
+int demanderColonne();
+int demanderDirection();
+int demanderDistance();
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -292,6 +305,47 @@ int lireEntier(char question[], int minimum, int maximum)
     } while (nombre < minimum || nombre > maximum);
 
     return nombre;
+}
+
+int demanderAction(int joueur, int numeroAction)
+{
+    printf("\n  %s (%c) - action %d / %d\n", COMPAGNIES[joueur], SYMBOLES[joueur],
+           numeroAction, ACTIONS_PAR_TOUR);
+    printf("    %d = Deplacer   %d = Poser   %d = Passer\n", DEPLACER, POSER, PASSER);
+    return lireEntier("Ton choix", PASSER, POSER);
+}
+
+int demanderLigne()
+{
+    return lireEntier("Ligne", 0, HAUTEUR - 1);
+}
+
+int demanderColonne()
+{
+    return lireEntier("Colonne", 0, LARGEUR - 1);
+}
+
+int demanderDirection()
+{
+    int direction;
+
+    printf("    7 8 9\n");
+    printf("    4   6\n");
+    printf("    1 2 3\n");
+
+    do {
+        direction = lireEntier("Direction", DIRECTION_MIN, DIRECTION_MAX);
+        if (direction == DIRECTION_CENTRE) {
+            printf("  %d n'est pas une direction.\n", DIRECTION_CENTRE);
+        }
+    } while (direction == DIRECTION_CENTRE);
+
+    return direction;
+}
+
+int demanderDistance()
+{
+    return lireEntier("Nombre de cases", 1, DISTANCE_MAX);
 }
 
 int main()
