@@ -45,6 +45,11 @@
 #define DIRECTION_MAX 9
 #define DIRECTION_CENTRE 5
 
+#define ACTION_OK 0
+#define ERREUR_PAS_TON_AVION 1
+#define ERREUR_HORS_GRILLE 2
+#define ERREUR_CASE_OCCUPEE 3
+
 #define SYMB_CIEL '.'
 #define SYMB_GRELE '#'
 
@@ -89,6 +94,8 @@ int demanderDirection();
 int demanderDistance();
 int directionLigne(int direction);
 int directionColonne(int direction);
+int deplacerAvion(int grille[HAUTEUR][LARGEUR], int joueur, int ligne, int colonne,
+                  int direction, int distance);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -380,6 +387,27 @@ int directionColonne(int direction)
         default:
             return 0;
     }
+}
+
+int deplacerAvion(int grille[HAUTEUR][LARGEUR], int joueur, int ligne, int colonne,
+                  int direction, int distance)
+{
+    int nouvelleLigne = ligne + directionLigne(direction) * distance;
+    int nouvelleColonne = colonne + directionColonne(direction) * distance;
+
+    if (grille[ligne][colonne] != joueur) {
+        return ERREUR_PAS_TON_AVION;
+    }
+    if (estDansGrille(nouvelleLigne, nouvelleColonne) == 0) {
+        return ERREUR_HORS_GRILLE;
+    }
+    if (grille[nouvelleLigne][nouvelleColonne] != VIDE) {
+        return ERREUR_CASE_OCCUPEE;
+    }
+
+    grille[nouvelleLigne][nouvelleColonne] = joueur;
+    grille[ligne][colonne] = VIDE;
+    return ACTION_OK;
 }
 
 int main()
