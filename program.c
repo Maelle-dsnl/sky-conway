@@ -108,6 +108,7 @@ void appliquerGrele(int grille[HAUTEUR][LARGEUR]);
 int compterAvions(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur);
 int meilleurScore(int scores[]);
 int chercherGagnant(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int manche);
+void jouerTour(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int joueur, int manche);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -524,6 +525,37 @@ int chercherGagnant(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], i
     return PARTIE_EN_COURS;
 }
 
+void jouerTour(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int joueur, int manche)
+{
+    for (int a = 1; a <= ACTIONS_PAR_TOUR; a++) {
+        int code;
+
+        afficherGrille(grille);
+        afficherScores(grille, scores, reserve, manche);
+
+        do {
+            int action = demanderAction(joueur, a);
+            code = ACTION_OK;
+
+            if (action == DEPLACER) {
+                int ligne = demanderLigne();
+                int colonne = demanderColonne();
+                int direction = demanderDirection();
+                int distance = demanderDistance();
+                code = deplacerAvion(grille, joueur, ligne, colonne, direction, distance);
+            } else if (action == POSER) {
+                int ligne = demanderLigne();
+                int colonne = demanderColonne();
+                code = poserAvion(grille, reserve, joueur, ligne, colonne);
+            }
+
+            afficherErreur(code);
+        } while (code != ACTION_OK);
+
+        faireAtterrir(grille, scores);
+    }
+}
+
 int main()
 {
     int grille[HAUTEUR][LARGEUR];
@@ -532,6 +564,7 @@ int main()
     int manche = PREMIERE_MANCHE;
 
     initialiserPartie(grille, scores, reserve);
+    jouerTour(grille, scores, reserve, JOUEUR1, manche);
     afficherGrille(grille);
     afficherScores(grille, scores, reserve, manche);
 
