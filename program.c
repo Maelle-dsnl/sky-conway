@@ -109,6 +109,7 @@ int compterAvions(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur);
 int meilleurScore(int scores[]);
 int chercherGagnant(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int manche);
 void jouerTour(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int joueur, int manche);
+void afficherFin(int gagnant);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -556,17 +557,53 @@ void jouerTour(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int jo
     }
 }
 
+void afficherFin(int gagnant)
+{
+    printf("\n  ===== FIN DE LA PARTIE =====\n");
+    if (gagnant == MATCH_NUL) {
+        printf("  Match nul !\n");
+    } else {
+        printf("  %s (%c) gagne la partie !\n", COMPAGNIES[gagnant], SYMBOLES[gagnant]);
+    }
+}
+
 int main()
 {
     int grille[HAUTEUR][LARGEUR];
     int scores[NB_JOUEURS + 1];
     int reserve[NB_JOUEURS + 1];
     int manche = PREMIERE_MANCHE;
+    int gagnant = PARTIE_EN_COURS;
 
+    printf("\n  ===== SKY CONWAY =====\n");
     initialiserPartie(grille, scores, reserve);
-    jouerTour(grille, scores, reserve, JOUEUR1, manche);
+
+    while (gagnant == PARTIE_EN_COURS) {
+        int premier = JOUEUR1;
+        int second = JOUEUR2;
+
+        if (manche % 2 == 0) {
+            premier = JOUEUR2;
+            second = JOUEUR1;
+        }
+
+        jouerTour(grille, scores, reserve, premier, manche);
+        jouerTour(grille, scores, reserve, second, manche);
+
+        printf("\n  --- Fin de la manche %d : le ciel evolue ---\n", manche);
+        evoluerGrille(grille, scores);
+        faireAtterrir(grille, scores);
+        appliquerGrele(grille);
+
+        gagnant = chercherGagnant(grille, scores, reserve, manche);
+        if (gagnant == PARTIE_EN_COURS) {
+            manche++;
+        }
+    }
+
     afficherGrille(grille);
     afficherScores(grille, scores, reserve, manche);
+    afficherFin(gagnant);
 
     return 0;
 }
