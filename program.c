@@ -99,6 +99,7 @@ int directionColonne(int direction);
 int deplacerAvion(int grille[HAUTEUR][LARGEUR], int joueur, int ligne, int colonne,
                   int direction, int distance);
 int poserAvion(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur, int ligne, int colonne);
+void afficherErreur(int code);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -428,6 +429,27 @@ int poserAvion(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur, int lign
     grille[ligne][colonne] = joueur;
     reserve[joueur] = reserve[joueur] - 1;
     return ACTION_OK;
+}
+
+void afficherErreur(int code)
+{
+    switch (code) {
+        case ERREUR_PAS_TON_AVION:
+            printf("  Impossible : il n'y a pas un de tes avions sur cette case.\n");
+            break;
+        case ERREUR_HORS_GRILLE:
+            printf("  Impossible : l'avion sortirait de la grille.\n");
+            break;
+        case ERREUR_CASE_OCCUPEE:
+            printf("  Impossible : cette case n'est pas vide.\n");
+            break;
+        case ERREUR_RESERVE_VIDE:
+            printf("  Impossible : ta reserve est vide.\n");
+            break;
+        case ERREUR_HORS_ZONE:
+            printf("  Impossible : tu dois poser dans ta zone de depart.\n");
+            break;
+    }
 }
 
 int main()
