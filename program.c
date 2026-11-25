@@ -100,6 +100,7 @@ int deplacerAvion(int grille[HAUTEUR][LARGEUR], int joueur, int ligne, int colon
                   int direction, int distance);
 int poserAvion(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur, int ligne, int colonne);
 void afficherErreur(int code);
+void faireAtterrir(int grille[HAUTEUR][LARGEUR], int scores[]);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -449,6 +450,20 @@ void afficherErreur(int code)
         case ERREUR_HORS_ZONE:
             printf("  Impossible : tu dois poser dans ta zone de depart.\n");
             break;
+    }
+}
+
+void faireAtterrir(int grille[HAUTEUR][LARGEUR], int scores[])
+{
+    for (int j = JOUEUR1; j <= JOUEUR2; j++) {
+        int ligne = ligneArrivee(j);
+
+        for (int c = 0; c < LARGEUR; c++) {
+            if (grille[ligne][c] == j) {
+                grille[ligne][c] = VIDE;
+                scores[j] = scores[j] + POINTS_ATTERRISSAGE;
+            }
+        }
     }
 }
 
