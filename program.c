@@ -49,6 +49,8 @@
 #define ERREUR_PAS_TON_AVION 1
 #define ERREUR_HORS_GRILLE 2
 #define ERREUR_CASE_OCCUPEE 3
+#define ERREUR_RESERVE_VIDE 4
+#define ERREUR_HORS_ZONE 5
 
 #define SYMB_CIEL '.'
 #define SYMB_GRELE '#'
@@ -96,6 +98,7 @@ int directionLigne(int direction);
 int directionColonne(int direction);
 int deplacerAvion(int grille[HAUTEUR][LARGEUR], int joueur, int ligne, int colonne,
                   int direction, int distance);
+int poserAvion(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur, int ligne, int colonne);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -407,6 +410,23 @@ int deplacerAvion(int grille[HAUTEUR][LARGEUR], int joueur, int ligne, int colon
 
     grille[nouvelleLigne][nouvelleColonne] = joueur;
     grille[ligne][colonne] = VIDE;
+    return ACTION_OK;
+}
+
+int poserAvion(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur, int ligne, int colonne)
+{
+    if (reserve[joueur] == 0) {
+        return ERREUR_RESERVE_VIDE;
+    }
+    if (estDansZone(joueur, ligne) == 0) {
+        return ERREUR_HORS_ZONE;
+    }
+    if (grille[ligne][colonne] != VIDE) {
+        return ERREUR_CASE_OCCUPEE;
+    }
+
+    grille[ligne][colonne] = joueur;
+    reserve[joueur] = reserve[joueur] - 1;
     return ACTION_OK;
 }
 
