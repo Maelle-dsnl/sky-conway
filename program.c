@@ -52,6 +52,9 @@
 #define ERREUR_RESERVE_VIDE 4
 #define ERREUR_HORS_ZONE 5
 
+#define PARTIE_EN_COURS -1
+#define MATCH_NUL 0
+
 #define SYMB_CIEL '.'
 #define SYMB_GRELE '#'
 
@@ -102,6 +105,9 @@ int poserAvion(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur, int lign
 void afficherErreur(int code);
 void faireAtterrir(int grille[HAUTEUR][LARGEUR], int scores[]);
 void appliquerGrele(int grille[HAUTEUR][LARGEUR]);
+int compterAvions(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur);
+int meilleurScore(int scores[]);
+int chercherGagnant(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int manche);
 
 
 void initialiserPartie(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[])
@@ -477,6 +483,45 @@ void appliquerGrele(int grille[HAUTEUR][LARGEUR])
             }
         }
     }
+}
+
+int compterAvions(int grille[HAUTEUR][LARGEUR], int reserve[], int joueur)
+{
+    return compterAvionsEnVol(grille, joueur) + reserve[joueur];
+}
+
+int meilleurScore(int scores[])
+{
+    if (scores[JOUEUR1] > scores[JOUEUR2]) {
+        return JOUEUR1;
+    }
+    if (scores[JOUEUR2] > scores[JOUEUR1]) {
+        return JOUEUR2;
+    }
+    return MATCH_NUL;
+}
+
+int chercherGagnant(int grille[HAUTEUR][LARGEUR], int scores[], int reserve[], int manche)
+{
+    int elimineJ1 = compterAvions(grille, reserve, JOUEUR1) < FLOTTE_MIN;
+    int elimineJ2 = compterAvions(grille, reserve, JOUEUR2) < FLOTTE_MIN;
+
+    if (scores[JOUEUR1] >= SCORE_VICTOIRE || scores[JOUEUR2] >= SCORE_VICTOIRE) {
+        return meilleurScore(scores);
+    }
+    if (elimineJ1 && elimineJ2) {
+        return MATCH_NUL;
+    }
+    if (elimineJ1) {
+        return JOUEUR2;
+    }
+    if (elimineJ2) {
+        return JOUEUR1;
+    }
+    if (manche >= MANCHES_MAX) {
+        return meilleurScore(scores);
+    }
+    return PARTIE_EN_COURS;
 }
 
 int main()
